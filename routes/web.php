@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
+
+// ── Public ──────────────────────────────────────
+Route::get('/', fn() => redirect()->route('login'));
+
+Route::get('/login',   [LoginController::class, 'showForm'])->name('login');
+Route::post('/login',  [LoginController::class, 'login'])->name('login.post');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// ── Super Admin ──────────────────────────────────
+Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'role:super-admin'])->group(function () {
+    Route::get('/dashboard', fn() => view('super-admin.dashboard'))->name('dashboard');
+});
+
+// ── Admin ────────────────────────────────────────
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+});
+
+// ── Owner ────────────────────────────────────────
+Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->group(function () {
+    Route::get('/dashboard', fn() => view('owner.dashboard'))->name('dashboard');
+});
+
+// ── Employee ─────────────────────────────────────
+Route::prefix('employee')->name('employee.')->middleware(['auth', 'role:employee'])->group(function () {
+    Route::get('/dashboard', fn() => view('employee.dashboard'))->name('dashboard');
+});
+
+// ── Tenant ───────────────────────────────────────
+Route::prefix('tenant')->name('tenant.')->middleware(['auth', 'role:tenant'])->group(function () {
+    Route::get('/dashboard', fn() => view('tenant.dashboard'))->name('dashboard');
+});
