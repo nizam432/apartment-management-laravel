@@ -75,7 +75,18 @@
         <div class="sidebar">
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-                    @yield('sidebar')
+                    {{-- Load sidebar based on role --}}
+                    @if(auth()->user()->hasRole('super-admin'))
+                        @include('partials.super-admin-sidebar')
+                    @elseif(auth()->user()->hasRole('admin'))
+                        @include('partials.admin-sidebar')
+                    @elseif(auth()->user()->hasRole('owner'))
+                        @include('partials.owner-sidebar')
+                    @elseif(auth()->user()->hasRole('employee'))
+                        @include('partials.employee-sidebar')
+                    @elseif(auth()->user()->hasRole('tenant'))
+                        @include('partials.tenant-sidebar')
+                    @endif
                 </ul>
             </nav>
         </div>

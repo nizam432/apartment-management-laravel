@@ -8,34 +8,6 @@
     <li class="breadcrumb-item active">Admins</li>
 @endsection
 
-@section('sidebar')
-    <li class="nav-item">
-        <a href="{{ route('super-admin.dashboard') }}" class="nav-link">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p>Dashboard</p>
-        </a>
-    </li>
-    <li class="nav-item menu-open">
-        <a href="#" class="nav-link active">
-            <i class="nav-icon fas fa-users-cog"></i>
-            <p>Admin Management <i class="right fas fa-angle-left"></i></p>
-        </a>
-        <ul class="nav nav-treeview">
-            <li class="nav-item">
-                <a href="{{ route('super-admin.admins.index') }}" class="nav-link active">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>All Admins</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('super-admin.admins.create') }}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Add Admin</p>
-                </a>
-            </li>
-        </ul>
-    </li>
-@endsection
 
 @section('content')
 <div class="card">
