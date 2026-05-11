@@ -46,8 +46,8 @@
 
             {{-- User Menu --}}
             <li class="nav-item dropdown">
-                <a class="nav-link" data-toggle="dropdown" href="#">
-                    <i class="far fa-user-circle"></i>
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="far fa-user-circle mr-1"></i>
                     {{ auth()->user()->name }}
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">

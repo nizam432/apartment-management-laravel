@@ -21,8 +21,14 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'role:su
 });
 
 // ── Admin ────────────────────────────────────────
+use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\BuildingController;
+
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+    Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+    Route::resource('buildings', BuildingController::class);
+    Route::patch('buildings/{building}/toggle-status', [BuildingController::class, 'toggleStatus'])
+         ->name('buildings.toggle-status');
 });
 
 // ── Owner ────────────────────────────────────────

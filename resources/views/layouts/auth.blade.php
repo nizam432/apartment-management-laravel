@@ -13,7 +13,7 @@
     <!-- jQuery -->
     <script src="{{ asset('jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap JS -->
-    <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
     <!-- AdminLTE JS -->
     <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 </head>
