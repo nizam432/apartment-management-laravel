@@ -102,3 +102,27 @@
         </li>
     </ul>
 </li>
+
+{{-- Owner Management --}}
+<li class="nav-item {{ request()->routeIs('admin.owners.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('admin.owners.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-user-tie"></i>
+        <p>Owner Management <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('admin.owners.index') }}"
+               class="nav-link {{ request()->routeIs('admin.owners.index') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>All Owners</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.owners.create') }}"
+               class="nav-link {{ request()->routeIs('admin.owners.create') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Owner</p>
+            </a>
+        </li>
+    </ul>
+</li>

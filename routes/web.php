@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\BuildingController;
 use App\Http\Controllers\Admin\FlatController;
 use App\Http\Controllers\Admin\FloorController;
 use App\Http\Controllers\Admin\TenantController;
+use App\Http\Controllers\Admin\OwnerController;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
@@ -47,6 +48,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('tenants/flats-by-floor/{floor}', [TenantController::class, 'flatsByFloor'])
          ->name('tenants.flats-by-floor');
     Route::resource('tenants', TenantController::class);
+
+    // Owner management
+    Route::resource('owners', OwnerController::class);
+    Route::patch('owners/{owner}/toggle-status', [OwnerController::class, 'toggleStatus'])
+         ->name('owners.toggle-status');
 });
 
 // ── Owner ────────────────────────────────────────
