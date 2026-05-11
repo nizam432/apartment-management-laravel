@@ -11,8 +11,13 @@ Route::post('/login',  [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // ── Super Admin ──────────────────────────────────
+use App\Http\Controllers\SuperAdmin\AdminController as SuperAdminController;
+
 Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'role:super-admin'])->group(function () {
     Route::get('/dashboard', fn() => view('super-admin.dashboard'))->name('dashboard');
+    Route::resource('admins', SuperAdminController::class);
+    Route::patch('admins/{admin}/toggle-status', [SuperAdminController::class, 'toggleStatus'])
+         ->name('admins.toggle-status');
 });
 
 // ── Admin ────────────────────────────────────────

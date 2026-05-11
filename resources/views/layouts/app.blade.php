@@ -11,6 +11,18 @@
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <!-- AdminLTE CSS -->
     <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
+    <!-- Custom CSS -->
+    <style>
+        body { font-size: 15px; }
+        .nav-sidebar .nav-link p { font-size: 14px; }
+        .table td, .table th { font-size: 14px; }
+        .card-title { font-size: 16px; }
+        .btn { font-size: 13px; }
+        .badge { font-size: 12px; }
+        .breadcrumb-item { font-size: 13px; }
+        .main-header .navbar-nav .nav-link { font-size: 14px; }
+        h1.m-0 { font-size: 22px; }
+    </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -88,24 +100,6 @@
 
         <div class="content">
             <div class="container-fluid">
-                {{-- Success/Error Message --}}
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show">
-                        <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
-                        <button type="button" class="close" data-dismiss="alert">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-                @endif
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <i class="fas fa-exclamation-circle mr-2"></i>{{ session('error') }}
-                        <button type="button" class="close" data-dismiss="alert">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-                @endif
-
                 @yield('content')
             </div>
         </div>
@@ -126,5 +120,41 @@
 <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE JS -->
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
+
+<!-- Toast Notification -->
+@if(session('success') || session('error') || session('warning'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const type    = "{{ session('success') ? 'success' : (session('warning') ? 'warning' : 'error') }}";
+        const message = "{{ session('success') ?? session('warning') ?? session('error') }}";
+        const colors  = { success: '#28a745', warning: '#dc3545', error: '#dc3545' };
+        const icons   = { success: '✔', warning: '🗑', error: '✖' };
+
+        const toast = document.createElement('div');
+        toast.innerHTML = `<span style="margin-right:8px">${icons[type]}</span>${message}`;
+        toast.style.cssText = `
+            position:fixed; top:20px; right:20px; z-index:9999;
+            background:${colors[type]}; color:#fff;
+            padding:12px 20px; border-radius:6px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.15);
+            font-size:14px; display:flex; align-items:center;
+            animation: slideIn .3s ease;
+        `;
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn { from { opacity:0; transform:translateX(50px); } to { opacity:1; transform:translateX(0); } }
+            @keyframes slideOut { from { opacity:1; transform:translateX(0); } to { opacity:0; transform:translateX(50px); } }
+        `;
+        document.head.appendChild(style);
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'slideOut .3s ease forwards';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    });
+</script>
+@endif
 </body>
 </html>
