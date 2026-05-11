@@ -78,3 +78,27 @@
         </li>
     </ul>
 </li>
+
+{{-- Tenant Management --}}
+<li class="nav-item {{ request()->routeIs('admin.tenants.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('admin.tenants.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-users"></i>
+        <p>Tenant Management <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('admin.tenants.index') }}"
+               class="nav-link {{ request()->routeIs('admin.tenants.index') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>All Tenants</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.tenants.create') }}"
+               class="nav-link {{ request()->routeIs('admin.tenants.create') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Tenant</p>
+            </a>
+        </li>
+    </ul>
+</li>

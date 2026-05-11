@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\BuildingController;
 use App\Http\Controllers\Admin\FlatController;
 use App\Http\Controllers\Admin\FloorController;
+use App\Http\Controllers\Admin\TenantController;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
@@ -41,6 +42,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     // Flat management
     Route::resource('flats', FlatController::class)->except(['show']);
+
+    // Tenant management
+    Route::get('tenants/flats-by-floor/{floor}', [TenantController::class, 'flatsByFloor'])
+         ->name('tenants.flats-by-floor');
+    Route::resource('tenants', TenantController::class);
 });
 
 // ── Owner ────────────────────────────────────────
