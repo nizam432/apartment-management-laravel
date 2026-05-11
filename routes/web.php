@@ -23,12 +23,24 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'role:su
 // ── Admin ────────────────────────────────────────
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\BuildingController;
+use App\Http\Controllers\Admin\FlatController;
+use App\Http\Controllers\Admin\FloorController;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+
+    // Building management
     Route::resource('buildings', BuildingController::class);
     Route::patch('buildings/{building}/toggle-status', [BuildingController::class, 'toggleStatus'])
          ->name('buildings.toggle-status');
+
+    // Floor management
+    Route::get('floors/by-building/{building}', [FloorController::class, 'byBuilding'])
+         ->name('floors.by-building');
+    Route::resource('floors', FloorController::class)->except(['show']);
+
+    // Flat management
+    Route::resource('flats', FlatController::class)->except(['show']);
 });
 
 // ── Owner ────────────────────────────────────────
