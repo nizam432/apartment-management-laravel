@@ -150,3 +150,60 @@
         </li>
     </ul>
 </li>
+
+{{-- Complaint Management --}}
+<li class="nav-item {{ request()->routeIs('admin.complaints.*') ? 'menu-open' : '' }}">
+    <a href="{{ route('admin.complaints.index') }}"
+       class="nav-link {{ request()->routeIs('admin.complaints.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-exclamation-circle"></i>
+        <p>Complaints</p>
+    </a>
+</li>
+
+{{-- Visitor Log --}}
+<li class="nav-item {{ request()->routeIs('admin.visitor-logs.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('admin.visitor-logs.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-clipboard-list"></i>
+        <p>Visitor Log <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('admin.visitor-logs.index') }}"
+               class="nav-link {{ request()->routeIs('admin.visitor-logs.index') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>All Visitors</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.visitor-logs.create') }}"
+               class="nav-link {{ request()->routeIs('admin.visitor-logs.create') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Visitor</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+{{-- Notice Board --}}
+<li class="nav-item {{ request()->routeIs('admin.notices.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('admin.notices.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-bullhorn"></i>
+        <p>Notice Board <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('admin.notices.index') }}"
+               class="nav-link {{ request()->routeIs('admin.notices.index') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>All Notices</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.notices.create') }}"
+               class="nav-link {{ request()->routeIs('admin.notices.create') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Notice</p>
+            </a>
+        </li>
+    </ul>
+</li>

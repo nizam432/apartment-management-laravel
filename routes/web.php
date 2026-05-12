@@ -25,11 +25,14 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'role:su
 // ── Admin ────────────────────────────────────────
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\BuildingController;
+use App\Http\Controllers\Admin\ComplaintController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\FlatController;
 use App\Http\Controllers\Admin\FloorController;
-use App\Http\Controllers\Admin\TenantController;
+use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\OwnerController;
+use App\Http\Controllers\Admin\TenantController;
+use App\Http\Controllers\Admin\VisitorLogController;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
@@ -61,6 +64,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::resource('employees', EmployeeController::class);
     Route::delete('employees/documents/{document}', [EmployeeController::class, 'deleteDocument'])
          ->name('employees.documents.delete');
+
+    // Complaint management
+    Route::resource('complaints', ComplaintController::class)->only(['index', 'show', 'update', 'destroy']);
+
+    // Visitor log management
+    Route::get('visitor-logs/tenants-by-flat/{flat}', [VisitorLogController::class, 'tenantsByFlat'])
+         ->name('visitor-logs.tenants-by-flat');
+    Route::resource('visitor-logs', VisitorLogController::class)->except(['edit', 'show']);
+
+    // Notice management
+    Route::resource('notices', NoticeController::class)->except(['show']);
 });
 
 // ── Owner ────────────────────────────────────────
