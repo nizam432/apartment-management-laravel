@@ -12,17 +12,20 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 use App\Http\Controllers\SuperAdmin\AdminController as SuperAdminController;
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboard;
+use App\Http\Controllers\SuperAdmin\DepartmentController;
 
 Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'role:super-admin'])->group(function () {
     Route::get('/dashboard', [SuperAdminDashboard::class, 'index'])->name('dashboard');
     Route::resource('admins', SuperAdminController::class);
     Route::patch('admins/{admin}/toggle-status', [SuperAdminController::class, 'toggleStatus'])
          ->name('admins.toggle-status');
+    Route::resource('departments', DepartmentController::class)->except(['show']);
 });
 
 // ── Admin ────────────────────────────────────────
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\BuildingController;
+use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\FlatController;
 use App\Http\Controllers\Admin\FloorController;
 use App\Http\Controllers\Admin\TenantController;
@@ -53,6 +56,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::resource('owners', OwnerController::class);
     Route::patch('owners/{owner}/toggle-status', [OwnerController::class, 'toggleStatus'])
          ->name('owners.toggle-status');
+
+    // Employee management
+    Route::resource('employees', EmployeeController::class);
+    Route::delete('employees/documents/{document}', [EmployeeController::class, 'deleteDocument'])
+         ->name('employees.documents.delete');
 });
 
 // ── Owner ────────────────────────────────────────

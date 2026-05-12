@@ -28,3 +28,26 @@
         </li>
     </ul>
 </li>
+
+<li class="nav-item {{ request()->routeIs('super-admin.departments.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('super-admin.departments.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-sitemap"></i>
+        <p>Department Management <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('super-admin.departments.index') }}"
+               class="nav-link {{ request()->routeIs('super-admin.departments.index') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>All Departments</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('super-admin.departments.create') }}"
+               class="nav-link {{ request()->routeIs('super-admin.departments.create') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Department</p>
+            </a>
+        </li>
+    </ul>
+</li>

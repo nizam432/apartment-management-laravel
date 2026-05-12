@@ -126,3 +126,27 @@
         </li>
     </ul>
 </li>
+
+{{-- Employee Management --}}
+<li class="nav-item {{ request()->routeIs('admin.employees.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('admin.employees.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-hard-hat"></i>
+        <p>Employee Management <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('admin.employees.index') }}"
+               class="nav-link {{ request()->routeIs('admin.employees.index') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>All Employees</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.employees.create') }}"
+               class="nav-link {{ request()->routeIs('admin.employees.create') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Employee</p>
+            </a>
+        </li>
+    </ul>
+</li>
