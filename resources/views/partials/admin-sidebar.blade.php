@@ -231,3 +231,27 @@
         </li>
     </ul>
 </li>
+
+{{-- Utility Bill --}}
+<li class="nav-item {{ request()->routeIs('admin.utility-bills.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('admin.utility-bills.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+        <p>Utility Bills <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('admin.utility-bills.index') }}"
+               class="nav-link {{ request()->routeIs('admin.utility-bills.index') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>All Bills</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.utility-bills.create') }}"
+               class="nav-link {{ request()->routeIs('admin.utility-bills.create') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Add Bill</p>
+            </a>
+        </li>
+    </ul>
+</li>
