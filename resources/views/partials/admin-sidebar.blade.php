@@ -207,3 +207,27 @@
         </li>
     </ul>
 </li>
+
+{{-- Rent Payment --}}
+<li class="nav-item {{ request()->routeIs('admin.rent-payments.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('admin.rent-payments.*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-money-bill-wave"></i>
+        <p>Rent Payment <i class="right fas fa-angle-left"></i></p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('admin.rent-payments.index') }}"
+               class="nav-link {{ request()->routeIs('admin.rent-payments.index') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>All Payments</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.rent-payments.create') }}"
+               class="nav-link {{ request()->routeIs('admin.rent-payments.create') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Collect Rent</p>
+            </a>
+        </li>
+    </ul>
+</li>

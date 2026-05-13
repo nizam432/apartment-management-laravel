@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\FlatController;
 use App\Http\Controllers\Admin\FloorController;
 use App\Http\Controllers\Admin\NoticeController;
 use App\Http\Controllers\Admin\OwnerController;
+use App\Http\Controllers\Admin\RentPaymentController;
 use App\Http\Controllers\Admin\TenantController;
 use App\Http\Controllers\Admin\VisitorLogController;
 
@@ -75,6 +76,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     // Notice management
     Route::resource('notices', NoticeController::class)->except(['show']);
+
+    // Rent payment management
+    Route::get('rent-payments/tenant-by-flat/{flat}', [RentPaymentController::class, 'tenantByFlat'])
+         ->name('rent-payments.tenant-by-flat');
+    Route::get('rent-payments/tenant/{tenant}/history', [RentPaymentController::class, 'tenantHistory'])
+         ->name('rent-payments.tenant-history');
+    Route::resource('rent-payments', RentPaymentController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
 });
 
 // ── Owner ────────────────────────────────────────
