@@ -112,8 +112,19 @@ Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->grou
 });
 
 // ── Employee ─────────────────────────────────────
+use App\Http\Controllers\Employee\DashboardController as EmployeeDashboard;
+use App\Http\Controllers\Employee\EmployeePanelController;
+use App\Http\Controllers\Employee\ProfileController as EmployeeProfile;
+
 Route::prefix('employee')->name('employee.')->middleware(['auth', 'role:employee'])->group(function () {
-    Route::get('/dashboard', fn() => view('employee.dashboard'))->name('dashboard');
+    Route::get('/dashboard',          [EmployeeDashboard::class, 'index'])->name('dashboard');
+    Route::get('/visitor-logs',       [EmployeePanelController::class, 'visitorLogs'])->name('visitor-logs');
+    Route::get('/visitor-logs/create',[EmployeePanelController::class, 'createVisitorLog'])->name('visitor-logs.create');
+    Route::post('/visitor-logs',      [EmployeePanelController::class, 'storeVisitorLog'])->name('visitor-logs.store');
+    Route::patch('/visitor-logs/{visitorLog}/checkout', [EmployeePanelController::class, 'checkout'])->name('visitor-logs.checkout');
+    Route::get('/notices',            [EmployeePanelController::class, 'notices'])->name('notices');
+    Route::get('/profile',            [EmployeeProfile::class, 'index'])->name('profile');
+    Route::put('/profile',            [EmployeeProfile::class, 'update'])->name('profile.update');
 });
 
 // ── Tenant ───────────────────────────────────────

@@ -137,6 +137,24 @@
 
                 <div class="col-md-4">
                     <div class="form-group">
+                        <label>Password <span class="text-danger">*</span></label>
+                        <input type="password" name="password"
+                            class="form-control @error('password') is-invalid @enderror"
+                            placeholder="Minimum 6 characters">
+                        @error('password') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Confirm Password <span class="text-danger">*</span></label>
+                        <input type="password" name="password_confirmation"
+                            class="form-control" placeholder="Repeat password">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
                         <label>NID Number <small class="text-muted">(Optional)</small></label>
                         <input type="text" name="nid_number"
                             class="form-control @error('nid_number') is-invalid @enderror"

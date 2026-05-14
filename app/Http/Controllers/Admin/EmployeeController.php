@@ -46,6 +46,7 @@ class EmployeeController extends Controller
 
     /**
      * Store a newly created employee in the database.
+     * Also creates a user account for the employee.
      *
      * @param Request $request
      */
@@ -55,8 +56,8 @@ class EmployeeController extends Controller
             'building_id'             => 'required|exists:buildings,id',
             'department_id'           => 'required|exists:departments,id',
             'name'                    => 'required|string|max:100',
-            'phone'                   => 'required|string|max:20',
-            'email'                   => 'nullable|email|max:100',
+            'phone'                   => 'required|string|max:20|unique:users,phone',
+            'email'                   => 'nullable|email|max:100|unique:users,email',
             'designation'             => 'required|string|max:100',
             'salary'                  => 'required|numeric|min:0',
             'join_date'               => 'required|date',
@@ -71,6 +72,7 @@ class EmployeeController extends Controller
             'photo'                   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'documents.*'             => 'nullable|file|max:5120',
             'document_names.*'        => 'nullable|string|max:100',
+            'password'                => 'required|string|min:6|confirmed',
         ]);
 
         // Check admin owns this building
@@ -78,8 +80,20 @@ class EmployeeController extends Controller
                 ->where('admin_id', Auth::id())
                 ->firstOrFail();
 
-        $data             = $request->except(['photo', 'documents', 'document_names']);
+        // Create user account for employee
+        $user = \App\Models\User::create([
+            'name'     => $request->name,
+            'phone'    => $request->phone,
+            'email'    => $request->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+        ]);
+
+        // Assign employee role
+        $user->assignRole('employee');
+
+        $data             = $request->except(['photo', 'documents', 'document_names', 'password', 'password_confirmation']);
         $data['admin_id'] = Auth::id();
+        $data['user_id']  = $user->id;
         $data['employee_code'] = Employee::generateCode();
 
         // Upload photo
@@ -100,7 +114,7 @@ class EmployeeController extends Controller
         }
 
         return redirect()->route('admin.employees.index')
-                         ->with('success', 'Employee created successfully!');
+                         ->with('success', 'Employee created successfully! Default password: 123456');
     }
 
     /**
