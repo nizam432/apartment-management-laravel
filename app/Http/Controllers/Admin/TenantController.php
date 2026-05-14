@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Building;
-use App\Models\Floor;
 use App\Models\Flat;
+use App\Models\Floor;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -45,6 +46,7 @@ class TenantController extends Controller
 
     /**
      * Store a newly created tenant in the database.
+     * Also creates a user account for the tenant.
      *
      * @param Request $request
      */
@@ -55,8 +57,9 @@ class TenantController extends Controller
             'floor_id'                => 'required|exists:floors,id',
             'flat_id'                 => 'required|exists:flats,id',
             'name'                    => 'required|string|max:100',
-            'phone'                   => 'required|string|max:20',
-            'email'                   => 'nullable|email|max:100',
+            'phone'                   => 'required|string|max:20|unique:users,phone',
+            'email'                   => 'nullable|email|max:100|unique:users,email',
+            'password'                => 'required|string|min:6|confirmed',
             'permanent_address'       => 'nullable|string|max:255',
             'date_of_birth'           => 'nullable|date',
             'gender'                  => 'nullable|in:male,female,other',
@@ -77,21 +80,57 @@ class TenantController extends Controller
                 ->where('admin_id', Auth::id())
                 ->firstOrFail();
 
-        $data             = $request->except(['nid_front', 'nid_back', 'picture']);
-        $data['admin_id'] = Auth::id();
+        // Create user account for tenant
+        $user = \App\Models\User::create([
+            'name'     => $request->name,
+            'phone'    => $request->phone,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // Assign tenant role
+        $user->assignRole('tenant');
 
         // Upload files
+        $nidFront = null;
+        $nidBack  = null;
+        $picture  = null;
+
         if ($request->hasFile('nid_front')) {
-            $data['nid_front'] = $request->file('nid_front')->store('tenants/nid', 'public');
+            $nidFront = $request->file('nid_front')->store('tenants/nid', 'public');
         }
         if ($request->hasFile('nid_back')) {
-            $data['nid_back'] = $request->file('nid_back')->store('tenants/nid', 'public');
+            $nidBack = $request->file('nid_back')->store('tenants/nid', 'public');
         }
         if ($request->hasFile('picture')) {
-            $data['picture'] = $request->file('picture')->store('tenants/pictures', 'public');
+            $picture = $request->file('picture')->store('tenants/pictures', 'public');
         }
 
-        $tenant = Tenant::create($data);
+        // Create tenant record
+        $tenant = Tenant::create([
+            'user_id'                 => $user->id,
+            'admin_id'                => Auth::id(),
+            'building_id'             => $request->building_id,
+            'floor_id'                => $request->floor_id,
+            'flat_id'                 => $request->flat_id,
+            'name'                    => $request->name,
+            'phone'                   => $request->phone,
+            'email'                   => $request->email,
+            'permanent_address'       => $request->permanent_address,
+            'date_of_birth'           => $request->date_of_birth,
+            'gender'                  => $request->gender,
+            'profession'              => $request->profession,
+            'emergency_contact_name'  => $request->emergency_contact_name,
+            'emergency_contact_phone' => $request->emergency_contact_phone,
+            'nid_front'               => $nidFront,
+            'nid_back'                => $nidBack,
+            'picture'                 => $picture,
+            'notes'                   => $request->notes,
+            'monthly_rent'            => $request->monthly_rent,
+            'advance_amount'          => $request->advance_amount ?? 0,
+            'move_in_date'            => $request->move_in_date,
+            'status'                  => 'active',
+        ]);
 
         // Update flat status to occupied
         Flat::find($request->flat_id)->update(['status' => 'occupied']);

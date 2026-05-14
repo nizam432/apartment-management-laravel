@@ -17,6 +17,7 @@ class Tenant extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'user_id',
         'admin_id',
         'building_id',
         'floor_id',
@@ -48,6 +49,11 @@ class Tenant extends Model
     ];
 
     // Relationships
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function admin()
     {
         return $this->belongsTo(User::class, 'admin_id');

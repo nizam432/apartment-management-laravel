@@ -20,7 +20,6 @@
         </div>
         <div class="card-body">
             <div class="row">
-                {{-- Name --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Full Name <span class="text-danger">*</span></label>
@@ -30,8 +29,6 @@
                         @error('name') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Phone --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Phone <span class="text-danger">*</span></label>
@@ -41,8 +38,6 @@
                         @error('phone') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Email --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Email <small class="text-muted">(Optional)</small></label>
@@ -52,8 +47,6 @@
                         @error('email') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Date of Birth --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Date of Birth <small class="text-muted">(Optional)</small></label>
@@ -63,13 +56,10 @@
                         @error('date_of_birth') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Gender --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Gender <small class="text-muted">(Optional)</small></label>
-                        <select name="gender"
-                            class="form-control @error('gender') is-invalid @enderror">
+                        <select name="gender" class="form-control @error('gender') is-invalid @enderror">
                             <option value="">Select Gender</option>
                             <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
                             <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
@@ -78,8 +68,6 @@
                         @error('gender') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Profession --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Profession <small class="text-muted">(Optional)</small></label>
@@ -89,8 +77,6 @@
                         @error('profession') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Permanent Address --}}
                 <div class="col-md-8">
                     <div class="form-group">
                         <label>Permanent Address <small class="text-muted">(Optional)</small></label>
@@ -100,8 +86,6 @@
                         @error('permanent_address') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Notes --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Notes <small class="text-muted">(Optional)</small></label>
@@ -144,6 +128,33 @@
         </div>
     </div>
 
+    {{-- Login Information --}}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-lock mr-2"></i>Login Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Password <span class="text-danger">*</span></label>
+                        <input type="password" name="password"
+                            class="form-control @error('password') is-invalid @enderror"
+                            placeholder="Minimum 6 characters">
+                        @error('password') <span class="invalid-feedback">{{ $message }}</span> @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Confirm Password <span class="text-danger">*</span></label>
+                        <input type="password" name="password_confirmation"
+                            class="form-control" placeholder="Repeat password">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Flat & Rent Information --}}
     <div class="card">
         <div class="card-header">
@@ -151,7 +162,6 @@
         </div>
         <div class="card-body">
             <div class="row">
-                {{-- Building --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Building <span class="text-danger">*</span></label>
@@ -168,8 +178,6 @@
                         @error('building_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Floor --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Floor <span class="text-danger">*</span></label>
@@ -181,8 +189,6 @@
                         @error('floor_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Flat --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Flat <span class="text-danger">*</span></label>
@@ -194,8 +200,6 @@
                         @error('flat_id') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Monthly Rent --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Monthly Rent (BDT) <span class="text-danger">*</span></label>
@@ -205,8 +209,6 @@
                         @error('monthly_rent') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Advance Amount --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Advance Amount (BDT) <small class="text-muted">(Optional)</small></label>
@@ -216,8 +218,6 @@
                         @error('advance_amount') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- Move In Date --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Move In Date <span class="text-danger">*</span></label>
@@ -238,35 +238,27 @@
         </div>
         <div class="card-body">
             <div class="row">
-                {{-- Picture --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Profile Picture</label>
                         <input type="file" name="picture"
-                            class="form-control @error('picture') is-invalid @enderror"
-                            accept="image/*">
+                            class="form-control @error('picture') is-invalid @enderror" accept="image/*">
                         @error('picture') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- NID Front --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>NID Front</label>
                         <input type="file" name="nid_front"
-                            class="form-control @error('nid_front') is-invalid @enderror"
-                            accept="image/*">
+                            class="form-control @error('nid_front') is-invalid @enderror" accept="image/*">
                         @error('nid_front') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
-
-                {{-- NID Back --}}
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>NID Back</label>
                         <input type="file" name="nid_back"
-                            class="form-control @error('nid_back') is-invalid @enderror"
-                            accept="image/*">
+                            class="form-control @error('nid_back') is-invalid @enderror" accept="image/*">
                         @error('nid_back') <span class="invalid-feedback">{{ $message }}</span> @enderror
                     </div>
                 </div>
@@ -285,19 +277,23 @@
 </form>
 
 <script>
+const floorsByBuildingUrl = "{{ route('admin.floors.by-building', ['building' => '__ID__']) }}".replace('__ID__', '');
+const flatsByFloorUrl     = "{{ route('admin.tenants.flats-by-floor', ['floor' => '__ID__']) }}".replace('__ID__', '');
+
 function loadFloors(buildingId) {
     const floorSelect = document.getElementById('floor_id');
     const flatSelect  = document.getElementById('flat_id');
     floorSelect.innerHTML = '<option value="">Loading...</option>';
     flatSelect.innerHTML  = '<option value="">Select Floor First</option>';
+    document.getElementById('monthly_rent').value = '';
 
     if (!buildingId) {
         floorSelect.innerHTML = '<option value="">Select Building First</option>';
         return;
     }
 
-    fetch(`/admin/floors/by-building/${buildingId}`)
-        .then(res => res.json())
+    fetch(floorsByBuildingUrl + buildingId)
+        .then(r => r.json())
         .then(floors => {
             floorSelect.innerHTML = '<option value="">Select Floor</option>';
             floors.forEach(f => {
@@ -315,8 +311,8 @@ function loadFlats(floorId) {
         return;
     }
 
-    fetch(`/admin/tenants/flats-by-floor/${floorId}`)
-        .then(res => res.json())
+    fetch(flatsByFloorUrl + floorId)
+        .then(r => r.json())
         .then(flats => {
             flatSelect.innerHTML = '<option value="">Select Flat</option>';
             flats.forEach(f => {

@@ -128,6 +128,19 @@ Route::prefix('employee')->name('employee.')->middleware(['auth', 'role:employee
 });
 
 // ── Tenant ───────────────────────────────────────
+use App\Http\Controllers\Tenant\DashboardController as TenantDashboard;
+use App\Http\Controllers\Tenant\TenantPanelController;
+use App\Http\Controllers\Tenant\ProfileController as TenantProfile;
+
 Route::prefix('tenant')->name('tenant.')->middleware(['auth', 'role:tenant'])->group(function () {
-    Route::get('/dashboard', fn() => view('tenant.dashboard'))->name('dashboard');
+    Route::get('/dashboard',          [TenantDashboard::class, 'index'])->name('dashboard');
+    Route::get('/flat',               [TenantPanelController::class, 'flat'])->name('flat');
+    Route::get('/rent-payments',      [TenantPanelController::class, 'rentPayments'])->name('rent-payments');
+    Route::get('/utility-bills',      [TenantPanelController::class, 'utilityBills'])->name('utility-bills');
+    Route::get('/complaints',         [TenantPanelController::class, 'complaints'])->name('complaints');
+    Route::get('/complaints/create',  [TenantPanelController::class, 'createComplaint'])->name('complaints.create');
+    Route::post('/complaints',        [TenantPanelController::class, 'storeComplaint'])->name('complaints.store');
+    Route::get('/notices',            [TenantPanelController::class, 'notices'])->name('notices');
+    Route::get('/profile',            [TenantProfile::class, 'index'])->name('profile');
+    Route::put('/profile',            [TenantProfile::class, 'update'])->name('profile.update');
 });

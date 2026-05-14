@@ -28,7 +28,7 @@ class LoginController extends Controller
 
         if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
             $field = 'email';
-        } elseif (is_numeric($login)) {
+        } elseif (preg_match('/^[0-9]+$/', $login)) {
             $field = 'phone';
         } else {
             $field = 'username';
