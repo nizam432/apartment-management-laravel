@@ -14,14 +14,91 @@
     <!-- Custom CSS -->
     <style>
         body { font-size: 15px; }
-        .nav-sidebar .nav-link p { font-size: 14px; }
-        .table td, .table th { font-size: 14px; }
+        .table td, .table th { font-size: 14px; padding: 10px 12px; }
         .card-title { font-size: 16px; }
-        .btn { font-size: 13px; }
+        .btn { font-size: 13px; padding: 6px 14px; }
         .badge { font-size: 12px; }
         .breadcrumb-item { font-size: 13px; }
         .main-header .navbar-nav .nav-link { font-size: 14px; }
         h1.m-0 { font-size: 22px; }
+        .form-control { font-size: 14px; padding: 8px 12px; height: auto; }
+        .form-group label { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+        .card-body { padding: 20px; }
+        .card-header { padding: 12px 20px; }
+        select.form-control { height: auto !important; }
+
+        /* ── Dark Theme (default) ── */
+        body.dark-theme .main-sidebar { background: #1a2035 !important; box-shadow: 2px 0 8px rgba(0,0,0,0.3); }
+        body.dark-theme .sidebar-dark-primary { background: #1a2035 !important; }
+        body.dark-theme .brand-link { padding: 16px 15px !important; border-bottom: 1px solid rgba(255,255,255,0.08) !important; background: #141929 !important; }
+        body.dark-theme .brand-text { font-size: 17px !important; font-weight: 700 !important; color: #fff !important; }
+        body.dark-theme .nav-sidebar > .nav-item > .nav-link { color: #a8b4c8 !important; border-radius: 8px !important; padding: 10px 14px !important; transition: all 0.25s; }
+        body.dark-theme .nav-sidebar > .nav-item > .nav-link:hover { background: rgba(255,255,255,0.07) !important; color: #fff !important; }
+        body.dark-theme .nav-sidebar > .nav-item > .nav-link.active { background: linear-gradient(135deg,#007bff,#0056d2) !important; color: #fff !important; box-shadow: 0 4px 12px rgba(0,123,255,0.35); }
+        body.dark-theme .nav-treeview { background: rgba(0,0,0,0.15) !important; border-radius: 6px; }
+        body.dark-theme .nav-treeview .nav-link { padding: 7px 12px 7px 35px !important; color: #8a9bb5 !important; border-radius: 6px !important; font-size: 13px !important; }
+        body.dark-theme .nav-treeview .nav-link:hover { color: #fff !important; background: rgba(255,255,255,0.06) !important; }
+        body.dark-theme .nav-treeview .nav-link.active { color: #4d9fff !important; background: rgba(0,123,255,0.15) !important; }
+
+        /* ── Light Theme ── */
+        body.light-theme .main-sidebar { background: #ffffff !important; box-shadow: 2px 0 12px rgba(0,0,0,0.1); }
+        body.light-theme .sidebar-dark-primary { background: #ffffff !important; }
+        body.light-theme .brand-link { padding: 16px 15px !important; border-bottom: 1px solid #e8ecf0 !important; background: #f4f6f9 !important; }
+        body.light-theme .brand-text { font-size: 17px !important; font-weight: 700 !important; color: #2d3748 !important; }
+        body.light-theme .brand-link .fas { color: #007bff !important; }
+        body.light-theme .nav-sidebar > .nav-item > .nav-link { color: #4a5568 !important; border-radius: 8px !important; padding: 10px 14px !important; transition: all 0.25s; }
+        body.light-theme .nav-sidebar > .nav-item > .nav-link:hover { background: #eef2ff !important; color: #007bff !important; }
+        body.light-theme .nav-sidebar > .nav-item > .nav-link.active { background: linear-gradient(135deg,#007bff,#0056d2) !important; color: #fff !important; box-shadow: 0 4px 12px rgba(0,123,255,0.25); }
+        body.light-theme .nav-sidebar .nav-icon { color: #718096 !important; }
+        body.light-theme .nav-sidebar > .nav-item > .nav-link.active .nav-icon { color: #fff !important; }
+        body.light-theme .nav-treeview { background: #f8fafc !important; border-radius: 6px; }
+        body.light-theme .nav-treeview .nav-link { padding: 7px 12px 7px 35px !important; color: #718096 !important; border-radius: 6px !important; font-size: 13px !important; }
+        body.light-theme .nav-treeview .nav-link:hover { color: #007bff !important; background: #eef2ff !important; }
+        body.light-theme .nav-treeview .nav-link.active { color: #007bff !important; background: #e8f0fe !important; font-weight: 600; }
+        body.light-theme .sidebar { background: #fff; }
+
+        /* ── Body Dark Theme ── */
+        body.dark-theme { background: #1a1f2e !important; }
+        body.dark-theme .content-wrapper { background: #1a1f2e !important; }
+        body.dark-theme .main-header { background: #212840 !important; border-bottom: 1px solid rgba(255,255,255,0.08) !important; }
+        body.dark-theme .main-header .nav-link { color: #a8b4c8 !important; }
+        body.dark-theme .main-header .nav-link:hover { color: #fff !important; }
+        body.dark-theme .content-header h1 { color: #e2e8f0 !important; }
+        body.dark-theme .breadcrumb { background: transparent !important; }
+        body.dark-theme .breadcrumb-item a { color: #7a9cc7 !important; }
+        body.dark-theme .breadcrumb-item.active { color: #a8b4c8 !important; }
+        body.dark-theme .breadcrumb-item + .breadcrumb-item::before { color: #4a5568 !important; }
+
+        /* Cards dark */
+        body.dark-theme .card { background: #252d3d !important; border: 1px solid rgba(255,255,255,0.06) !important; box-shadow: 0 2px 12px rgba(0,0,0,0.3) !important; }
+        body.dark-theme .card-header { background: #2a3347 !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; }
+        body.dark-theme .card-title { color: #e2e8f0 !important; }
+        body.dark-theme .card-footer { background: #2a3347 !important; border-top: 1px solid rgba(255,255,255,0.06) !important; }
+
+        /* Table dark */
+        body.dark-theme .table { color: #cbd5e0 !important; }
+        body.dark-theme .table thead th { background: #2a3347 !important; color: #a8b4c8 !important; border-color: rgba(255,255,255,0.06) !important; }
+        body.dark-theme .table td { border-color: rgba(255,255,255,0.06) !important; color: #cbd5e0 !important; }
+        body.dark-theme .table-hover tbody tr:hover { background: rgba(255,255,255,0.04) !important; }
+
+        /* Forms dark */
+        body.dark-theme .form-control { background: #1e2636 !important; border-color: rgba(255,255,255,0.1) !important; color: #e2e8f0 !important; }
+        body.dark-theme .form-control:focus { background: #1e2636 !important; border-color: #007bff !important; color: #fff !important; }
+        body.dark-theme .form-group label { color: #a8b4c8 !important; }
+        body.dark-theme .input-group-text { background: #2a3347 !important; border-color: rgba(255,255,255,0.1) !important; color: #a8b4c8 !important; }
+
+        /* Footer dark */
+        body.dark-theme .main-footer { background: #212840 !important; border-top: 1px solid rgba(255,255,255,0.08) !important; color: #a8b4c8 !important; }
+
+        /* ── Body Light Theme ── */
+        body.light-theme { background: #f4f6f9 !important; }
+        body.light-theme .content-wrapper { background: #f4f6f9 !important; }
+        body.light-theme .main-header { background: #fff !important; border-bottom: 1px solid #e8ecf0 !important; }
+        body.light-theme .main-footer { background: #fff !important; border-top: 1px solid #e8ecf0 !important; }
+        .nav-sidebar .nav-icon { font-size: 15px !important; width: 22px; text-align: center; margin-right: 8px; }
+        .nav-sidebar .nav-link p { font-size: 13.5px; font-weight: 500; }
+        .nav-sidebar > .nav-item { margin: 3px 10px; }
+        .nav-treeview .nav-item { margin: 1px 5px; }
     </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -37,7 +114,12 @@
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
-            {{-- Notifications --}}
+            {{-- Dark/Light Toggle --}}
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="theme-toggle" title="Toggle Theme">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">
                     <i class="far fa-bell"></i>
@@ -131,6 +213,37 @@
 <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE JS -->
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
+
+<!-- Theme Toggle Script -->
+<script>
+const body     = document.body;
+const icon     = document.getElementById('theme-icon');
+const themeKey = 'ams_theme';
+
+// Load saved theme
+const savedTheme = localStorage.getItem(themeKey) || 'dark';
+applyTheme(savedTheme);
+
+document.getElementById('theme-toggle').addEventListener('click', function(e) {
+    e.preventDefault();
+    const current = localStorage.getItem(themeKey) || 'dark';
+    const next    = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem(themeKey, next);
+    applyTheme(next);
+});
+
+function applyTheme(theme) {
+    body.classList.remove('dark-theme', 'light-theme');
+    body.classList.add(theme + '-theme');
+    if (theme === 'light') {
+        icon.className   = 'fas fa-moon';
+        icon.title       = 'Switch to Dark Mode';
+    } else {
+        icon.className   = 'fas fa-sun';
+        icon.title       = 'Switch to Light Mode';
+    }
+}
+</script>
 
 <!-- Toast Notification -->
 @if(session('success') || session('error') || session('warning'))
