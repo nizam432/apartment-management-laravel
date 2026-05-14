@@ -94,8 +94,21 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 });
 
 // ── Owner ────────────────────────────────────────
+use App\Http\Controllers\Owner\DashboardController as OwnerDashboard;
+use App\Http\Controllers\Owner\ProfileController as OwnerProfile;
+use App\Http\Controllers\Owner\OwnerPanelController;
+
 Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->group(function () {
-    Route::get('/dashboard', fn() => view('owner.dashboard'))->name('dashboard');
+    Route::get('/dashboard',     [OwnerDashboard::class, 'index'])->name('dashboard');
+    Route::get('/flats',         [OwnerPanelController::class, 'flats'])->name('flats');
+    Route::get('/tenants',       [OwnerPanelController::class, 'tenants'])->name('tenants');
+    Route::get('/rent-payments', [OwnerPanelController::class, 'rentPayments'])->name('rent-payments');
+    Route::get('/utility-bills', [OwnerPanelController::class, 'utilityBills'])->name('utility-bills');
+    Route::get('/complaints',    [OwnerPanelController::class, 'complaints'])->name('complaints');
+    Route::get('/visitor-logs',  [OwnerPanelController::class, 'visitorLogs'])->name('visitor-logs');
+    Route::get('/notices',       [OwnerPanelController::class, 'notices'])->name('notices');
+    Route::get('/profile',       [OwnerProfile::class, 'index'])->name('profile');
+    Route::put('/profile',       [OwnerProfile::class, 'update'])->name('profile.update');
 });
 
 // ── Employee ─────────────────────────────────────
