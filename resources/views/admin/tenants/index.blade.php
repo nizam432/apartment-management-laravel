@@ -59,6 +59,12 @@
                         </span>
                     </td>
                     <td>
+                        {{-- Rent History --}}
+                        <a href="{{ route('admin.rent-amount-history.index', $tenant->id) }}"
+                           class="btn btn-sm btn-warning" title="Rent History">
+                            <i class="fas fa-history"></i>
+                        </a>
+
                         {{-- View --}}
                         <a href="{{ route('admin.tenants.show', $tenant->id) }}"
                            class="btn btn-sm btn-secondary">

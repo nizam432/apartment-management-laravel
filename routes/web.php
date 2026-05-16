@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\RentPaymentController;
 use App\Http\Controllers\Admin\TenantController;
 use App\Http\Controllers\Admin\UtilityBillController;
 use App\Http\Controllers\Admin\VisitorLogController;
+use App\Http\Controllers\Admin\RentAmountHistoryController;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
@@ -85,7 +86,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
          ->name('rent-payments.tenant-history');
     Route::resource('rent-payments', RentPaymentController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
 
-    // Utility bill management
+   
+
+    // Rent amount history
+    Route::get('tenants/{tenant}/rent-history', [RentAmountHistoryController::class, 'index'])
+         ->name('rent-amount-history.index');
+    Route::get('tenants/{tenant}/rent-history/create', [RentAmountHistoryController::class, 'create'])
+         ->name('rent-amount-history.create');
+    Route::post('tenants/{tenant}/rent-history', [RentAmountHistoryController::class, 'store'])
+         ->name('rent-amount-history.store');
     Route::get('utility-bills/flat-details/{flat}', [UtilityBillController::class, 'flatDetails'])
          ->name('utility-bills.flat-details');
     Route::patch('utility-bills/{utilityBill}/mark-paid', [UtilityBillController::class, 'markPaid'])
