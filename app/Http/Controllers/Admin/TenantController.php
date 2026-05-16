@@ -218,7 +218,7 @@ class TenantController extends Controller
 
     /**
      * Remove the specified tenant (soft delete).
-     * Also updates flat status to vacant.
+     * Cannot delete if tenant has rent payment records.
      *
      * @param Tenant $tenant
      */
@@ -226,11 +226,158 @@ class TenantController extends Controller
     {
         $this->authorizeTenant($tenant);
 
+        // Check if tenant has any rent payment records
+        $hasPayments = \App\Models\RentPayment::where('tenant_id', $tenant->id)->exists();
+
+        if ($hasPayments) {
+            return back()->with('error', 'Cannot delete tenant. They have rent payment records. Use Move Out instead.');
+        }
+
         // Update flat status to vacant
         Flat::find($tenant->flat_id)->update(['status' => 'vacant']);
 
         $tenant->delete();
         return back()->with('warning', 'Tenant removed successfully.');
+    }
+
+    /**
+     * Show Move Out form.
+     *
+     * @param Tenant $tenant
+     */
+    public function moveOutForm(Tenant $tenant)
+    {
+        $this->authorizeTenant($tenant);
+        return view('admin.tenants.move-out', compact('tenant'));
+    }
+
+    /**
+     * Process Move Out — saves MoveOutRecord and marks tenant inactive.
+     *
+     * @param Request $request
+     * @param Tenant $tenant
+     */
+    public function moveOut(Request $request, Tenant $tenant)
+    {
+        $this->authorizeTenant($tenant);
+
+        $request->validate([
+            'move_out_date'    => 'required|date|after_or_equal:' . $tenant->move_in_date,
+            'amount_returned'  => 'required|numeric|min:0|max:' . $tenant->advance_amount,
+            'deduction_reason' => 'nullable|string|max:500',
+            'reason'           => 'nullable|string|max:255',
+        ]);
+
+        $advancePaid    = $tenant->advance_amount ?? 0;
+        $amountReturned = $request->amount_returned;
+        $deduction      = max(0, $advancePaid - $amountReturned);
+
+        // MoveOutRecord save করো
+        \App\Models\MoveOutRecord::create([
+            'tenant_id'        => $tenant->id,
+            'flat_id'          => $tenant->flat_id,
+            'floor_id'         => $tenant->floor_id,
+            'building_id'      => $tenant->building_id,
+            'advance_paid'     => $advancePaid,
+            'amount_returned'  => $amountReturned,
+            'deduction'        => $deduction,
+            'deduction_reason' => $request->deduction_reason,
+            'move_out_date'    => $request->move_out_date,
+            'reason'           => $request->reason,
+            'created_by'       => Auth::id(),
+        ]);
+
+        // Tenant inactive করো
+        $tenant->update([
+            'status'        => 'inactive',
+            'move_out_date' => $request->move_out_date,
+        ]);
+
+        // Flat vacant করো
+        Flat::find($tenant->flat_id)->update(['status' => 'vacant']);
+
+        return redirect()->route('admin.tenants.move-out-record', $tenant->id)
+                         ->with('success', 'Tenant moved out successfully! Receipt ready.');
+    }
+
+    /**
+     * Show move-out receipt for a tenant.
+     *
+     * @param Tenant $tenant
+     */
+    public function moveOutRecord(Tenant $tenant)
+    {
+        $this->authorizeTenant($tenant);
+
+        $record = \App\Models\MoveOutRecord::where('tenant_id', $tenant->id)
+                                           ->with(['flat', 'floor', 'building', 'createdBy'])
+                                           ->latest()
+                                           ->firstOrFail();
+
+        return view('admin.tenants.move-out-record', compact('tenant', 'record'));
+    }
+
+    /**
+     * Show Flat Transfer form.
+     *
+     * @param Tenant $tenant
+     */
+    public function transferForm(Tenant $tenant)
+    {
+        $this->authorizeTenant($tenant);
+        $floors = Floor::where('building_id', $tenant->building_id)->get();
+        return view('admin.tenants.transfer', compact('tenant', 'floors'));
+    }
+
+    /**
+     * Process Flat Transfer.
+     *
+     * @param Request $request
+     * @param Tenant $tenant
+     */
+    public function transfer(Request $request, Tenant $tenant)
+    {
+        $this->authorizeTenant($tenant);
+
+        $request->validate([
+            'to_flat_id'    => 'required|exists:flats,id',
+            'new_rent'      => 'required|numeric|min:0',
+            'transfer_date' => 'required|date',
+            'reason'        => 'nullable|string|max:255',
+        ]);
+
+        $newFlat = Flat::find($request->to_flat_id);
+
+        // Save transfer history
+        \App\Models\FlatTransferHistory::create([
+            'tenant_id'     => $tenant->id,
+            'building_id'   => $tenant->building_id,
+            'from_flat_id'  => $tenant->flat_id,
+            'to_flat_id'    => $request->to_flat_id,
+            'from_floor_id' => $tenant->floor_id,
+            'to_floor_id'   => $newFlat->floor_id,
+            'old_rent'      => $tenant->monthly_rent,
+            'new_rent'      => $request->new_rent,
+            'transfer_date' => $request->transfer_date,
+            'reason'        => $request->reason,
+            'created_by'    => Auth::id(),
+        ]);
+
+        // Old flat → vacant
+        Flat::find($tenant->flat_id)->update(['status' => 'vacant']);
+
+        // New flat → occupied
+        $newFlat->update(['status' => 'occupied']);
+
+        // Update tenant
+        $tenant->update([
+            'flat_id'      => $request->to_flat_id,
+            'floor_id'     => $newFlat->floor_id,
+            'monthly_rent' => $request->new_rent,
+        ]);
+
+        return redirect()->route('admin.tenants.index')
+                         ->with('success', 'Tenant transferred successfully!');
     }
 
     /**

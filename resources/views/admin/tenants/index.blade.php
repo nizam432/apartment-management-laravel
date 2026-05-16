@@ -52,40 +52,61 @@
                     <td>{{ $tenant->building->name ?? '—' }}</td>
                     <td>{{ $tenant->flat->flat_number ?? '—' }}</td>
                     <td>৳{{ number_format($tenant->monthly_rent) }}</td>
-                    <td>{{ $tenant->move_in_date->format('d M Y') }}</td>
+                    <td>{{ $tenant->move_in_date?->format('d M Y') ?? '—' }}</td>
                     <td>
                         <span class="badge {{ $tenant->status === 'active' ? 'badge-success' : 'badge-danger' }}">
                             {{ ucfirst($tenant->status) }}
                         </span>
                     </td>
                     <td>
-                        {{-- Rent History --}}
-                        <a href="{{ route('admin.rent-amount-history.index', $tenant->id) }}"
-                           class="btn btn-sm btn-warning" title="Rent History">
-                            <i class="fas fa-history"></i>
-                        </a>
-
-                        {{-- View --}}
-                        <a href="{{ route('admin.tenants.show', $tenant->id) }}"
-                           class="btn btn-sm btn-secondary">
-                            <i class="fas fa-eye"></i>
-                        </a>
-
-                        {{-- Edit --}}
-                        <a href="{{ route('admin.tenants.edit', $tenant->id) }}"
-                           class="btn btn-sm btn-info">
-                            <i class="fas fa-edit"></i>
-                        </a>
-
-                        {{-- Delete --}}
-                        <form action="{{ route('admin.tenants.destroy', $tenant->id) }}"
-                              method="POST" class="d-inline"
-                              onsubmit="return confirm('Are you sure you want to remove this tenant?')">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash"></i>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Actions
                             </button>
-                        </form>
+                            <div class="dropdown-menu dropdown-menu-right shadow-sm">
+                                {{-- View --}}
+                                <a href="{{ route('admin.tenants.show', $tenant->id) }}" class="dropdown-item">
+                                    <i class="fas fa-eye mr-2 text-secondary"></i> View
+                                </a>
+
+                                {{-- Edit --}}
+                                <a href="{{ route('admin.tenants.edit', $tenant->id) }}" class="dropdown-item">
+                                    <i class="fas fa-edit mr-2 text-info"></i> Edit
+                                </a>
+
+                                {{-- Rent History --}}
+                                <a href="{{ route('admin.rent-amount-history.index', $tenant->id) }}" class="dropdown-item">
+                                    <i class="fas fa-history mr-2 text-warning"></i> Rent History
+                                </a>
+
+                                @if($tenant->status === 'active')
+                                <div class="dropdown-divider"></div>
+
+                                {{-- Transfer Flat --}}
+                                <a href="{{ route('admin.tenants.transfer', $tenant->id) }}" class="dropdown-item">
+                                    <i class="fas fa-exchange-alt mr-2 text-primary"></i> Transfer Flat
+                                </a>
+
+                                {{-- Move Out --}}
+                                <a href="{{ route('admin.tenants.move-out', $tenant->id) }}" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt mr-2 text-danger"></i> Move Out
+                                </a>
+
+                                <div class="dropdown-divider"></div>
+                                @endif
+
+                                {{-- Delete --}}
+                                <form action="{{ route('admin.tenants.destroy', $tenant->id) }}"
+                                      method="POST"
+                                      onsubmit="return confirm('Are you sure you want to remove this tenant?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="fas fa-trash mr-2"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 @empty

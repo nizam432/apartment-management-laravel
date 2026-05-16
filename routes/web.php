@@ -2,18 +2,39 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\SuperAdmin\AdminController as SuperAdminController;
+use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboard;
+use App\Http\Controllers\SuperAdmin\DepartmentController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\BuildingController;
+use App\Http\Controllers\Admin\ComplaintController;
+use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\FlatController;
+use App\Http\Controllers\Admin\FloorController;
+use App\Http\Controllers\Admin\NoticeController;
+use App\Http\Controllers\Admin\OwnerController;
+use App\Http\Controllers\Admin\RentAmountHistoryController;
+use App\Http\Controllers\Admin\RentPaymentController;
+use App\Http\Controllers\Admin\TenantController;
+use App\Http\Controllers\Admin\UtilityBillController;
+use App\Http\Controllers\Admin\VisitorLogController;
+use App\Http\Controllers\Owner\DashboardController as OwnerDashboard;
+use App\Http\Controllers\Owner\ProfileController as OwnerProfile;
+use App\Http\Controllers\Owner\OwnerPanelController;
+use App\Http\Controllers\Employee\DashboardController as EmployeeDashboard;
+use App\Http\Controllers\Employee\EmployeePanelController;
+use App\Http\Controllers\Employee\ProfileController as EmployeeProfile;
+use App\Http\Controllers\Tenant\DashboardController as TenantDashboard;
+use App\Http\Controllers\Tenant\TenantPanelController;
+use App\Http\Controllers\Tenant\ProfileController as TenantProfile;
 
 // ── Public ──────────────────────────────────────
 Route::get('/', fn() => redirect()->route('login'));
-
 Route::get('/login',   [LoginController::class, 'showForm'])->name('login');
 Route::post('/login',  [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-use App\Http\Controllers\SuperAdmin\AdminController as SuperAdminController;
-use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboard;
-use App\Http\Controllers\SuperAdmin\DepartmentController;
-
+// ── Super Admin ──────────────────────────────────
 Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'role:super-admin'])->group(function () {
     Route::get('/dashboard', [SuperAdminDashboard::class, 'index'])->name('dashboard');
     Route::resource('admins', SuperAdminController::class);
@@ -23,20 +44,6 @@ Route::prefix('super-admin')->name('super-admin.')->middleware(['auth', 'role:su
 });
 
 // ── Admin ────────────────────────────────────────
-use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
-use App\Http\Controllers\Admin\BuildingController;
-use App\Http\Controllers\Admin\ComplaintController;
-use App\Http\Controllers\Admin\EmployeeController;
-use App\Http\Controllers\Admin\FlatController;
-use App\Http\Controllers\Admin\FloorController;
-use App\Http\Controllers\Admin\NoticeController;
-use App\Http\Controllers\Admin\OwnerController;
-use App\Http\Controllers\Admin\RentPaymentController;
-use App\Http\Controllers\Admin\TenantController;
-use App\Http\Controllers\Admin\UtilityBillController;
-use App\Http\Controllers\Admin\VisitorLogController;
-use App\Http\Controllers\Admin\RentAmountHistoryController;
-
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
 
@@ -57,6 +64,19 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('tenants/flats-by-floor/{floor}', [TenantController::class, 'flatsByFloor'])
          ->name('tenants.flats-by-floor');
     Route::resource('tenants', TenantController::class);
+    Route::get('tenants/{tenant}/move-out',   [TenantController::class, 'moveOutForm'])->name('tenants.move-out');
+    Route::patch('tenants/{tenant}/move-out', [TenantController::class, 'moveOut'])->name('tenants.move-out.store');
+    Route::get('tenants/{tenant}/transfer',   [TenantController::class, 'transferForm'])->name('tenants.transfer');
+    Route::patch('tenants/{tenant}/transfer', [TenantController::class, 'transfer'])->name('tenants.transfer.store');
+    Route::get('tenants/{tenant}/move-out-record', [TenantController::class, 'moveOutRecord'])->name('tenants.move-out-record');
+
+    // Rent amount history
+    Route::get('tenants/{tenant}/rent-history', [RentAmountHistoryController::class, 'index'])
+         ->name('rent-amount-history.index');
+    Route::get('tenants/{tenant}/rent-history/create', [RentAmountHistoryController::class, 'create'])
+         ->name('rent-amount-history.create');
+    Route::post('tenants/{tenant}/rent-history', [RentAmountHistoryController::class, 'store'])
+         ->name('rent-amount-history.store');
 
     // Owner management
     Route::resource('owners', OwnerController::class);
@@ -86,15 +106,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
          ->name('rent-payments.tenant-history');
     Route::resource('rent-payments', RentPaymentController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
 
-   
-
-    // Rent amount history
-    Route::get('tenants/{tenant}/rent-history', [RentAmountHistoryController::class, 'index'])
-         ->name('rent-amount-history.index');
-    Route::get('tenants/{tenant}/rent-history/create', [RentAmountHistoryController::class, 'create'])
-         ->name('rent-amount-history.create');
-    Route::post('tenants/{tenant}/rent-history', [RentAmountHistoryController::class, 'store'])
-         ->name('rent-amount-history.store');
+    // Utility bill management
     Route::get('utility-bills/flat-details/{flat}', [UtilityBillController::class, 'flatDetails'])
          ->name('utility-bills.flat-details');
     Route::patch('utility-bills/{utilityBill}/mark-paid', [UtilityBillController::class, 'markPaid'])
@@ -103,10 +115,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 });
 
 // ── Owner ────────────────────────────────────────
-use App\Http\Controllers\Owner\DashboardController as OwnerDashboard;
-use App\Http\Controllers\Owner\ProfileController as OwnerProfile;
-use App\Http\Controllers\Owner\OwnerPanelController;
-
 Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/dashboard',     [OwnerDashboard::class, 'index'])->name('dashboard');
     Route::get('/flats',         [OwnerPanelController::class, 'flats'])->name('flats');
@@ -121,35 +129,27 @@ Route::prefix('owner')->name('owner.')->middleware(['auth', 'role:owner'])->grou
 });
 
 // ── Employee ─────────────────────────────────────
-use App\Http\Controllers\Employee\DashboardController as EmployeeDashboard;
-use App\Http\Controllers\Employee\EmployeePanelController;
-use App\Http\Controllers\Employee\ProfileController as EmployeeProfile;
-
 Route::prefix('employee')->name('employee.')->middleware(['auth', 'role:employee'])->group(function () {
-    Route::get('/dashboard',          [EmployeeDashboard::class, 'index'])->name('dashboard');
-    Route::get('/visitor-logs',       [EmployeePanelController::class, 'visitorLogs'])->name('visitor-logs');
-    Route::get('/visitor-logs/create',[EmployeePanelController::class, 'createVisitorLog'])->name('visitor-logs.create');
-    Route::post('/visitor-logs',      [EmployeePanelController::class, 'storeVisitorLog'])->name('visitor-logs.store');
+    Route::get('/dashboard',           [EmployeeDashboard::class, 'index'])->name('dashboard');
+    Route::get('/visitor-logs',        [EmployeePanelController::class, 'visitorLogs'])->name('visitor-logs');
+    Route::get('/visitor-logs/create', [EmployeePanelController::class, 'createVisitorLog'])->name('visitor-logs.create');
+    Route::post('/visitor-logs',       [EmployeePanelController::class, 'storeVisitorLog'])->name('visitor-logs.store');
     Route::patch('/visitor-logs/{visitorLog}/checkout', [EmployeePanelController::class, 'checkout'])->name('visitor-logs.checkout');
-    Route::get('/notices',            [EmployeePanelController::class, 'notices'])->name('notices');
-    Route::get('/profile',            [EmployeeProfile::class, 'index'])->name('profile');
-    Route::put('/profile',            [EmployeeProfile::class, 'update'])->name('profile.update');
+    Route::get('/notices',             [EmployeePanelController::class, 'notices'])->name('notices');
+    Route::get('/profile',             [EmployeeProfile::class, 'index'])->name('profile');
+    Route::put('/profile',             [EmployeeProfile::class, 'update'])->name('profile.update');
 });
 
 // ── Tenant ───────────────────────────────────────
-use App\Http\Controllers\Tenant\DashboardController as TenantDashboard;
-use App\Http\Controllers\Tenant\TenantPanelController;
-use App\Http\Controllers\Tenant\ProfileController as TenantProfile;
-
 Route::prefix('tenant')->name('tenant.')->middleware(['auth', 'role:tenant'])->group(function () {
-    Route::get('/dashboard',          [TenantDashboard::class, 'index'])->name('dashboard');
-    Route::get('/flat',               [TenantPanelController::class, 'flat'])->name('flat');
-    Route::get('/rent-payments',      [TenantPanelController::class, 'rentPayments'])->name('rent-payments');
-    Route::get('/utility-bills',      [TenantPanelController::class, 'utilityBills'])->name('utility-bills');
-    Route::get('/complaints',         [TenantPanelController::class, 'complaints'])->name('complaints');
-    Route::get('/complaints/create',  [TenantPanelController::class, 'createComplaint'])->name('complaints.create');
-    Route::post('/complaints',        [TenantPanelController::class, 'storeComplaint'])->name('complaints.store');
-    Route::get('/notices',            [TenantPanelController::class, 'notices'])->name('notices');
-    Route::get('/profile',            [TenantProfile::class, 'index'])->name('profile');
-    Route::put('/profile',            [TenantProfile::class, 'update'])->name('profile.update');
+    Route::get('/dashboard',         [TenantDashboard::class, 'index'])->name('dashboard');
+    Route::get('/flat',              [TenantPanelController::class, 'flat'])->name('flat');
+    Route::get('/rent-payments',     [TenantPanelController::class, 'rentPayments'])->name('rent-payments');
+    Route::get('/utility-bills',     [TenantPanelController::class, 'utilityBills'])->name('utility-bills');
+    Route::get('/complaints',        [TenantPanelController::class, 'complaints'])->name('complaints');
+    Route::get('/complaints/create', [TenantPanelController::class, 'createComplaint'])->name('complaints.create');
+    Route::post('/complaints',       [TenantPanelController::class, 'storeComplaint'])->name('complaints.store');
+    Route::get('/notices',           [TenantPanelController::class, 'notices'])->name('notices');
+    Route::get('/profile',           [TenantProfile::class, 'index'])->name('profile');
+    Route::put('/profile',           [TenantProfile::class, 'update'])->name('profile.update');
 });

@@ -262,6 +262,7 @@ function applyTheme(theme) {
             padding:12px 20px; border-radius:6px;
             box-shadow:0 4px 12px rgba(0,0,0,0.15);
             font-size:14px; display:flex; align-items:center;
+            max-width: 400px;
             animation: slideIn .3s ease;
         `;
 
@@ -276,7 +277,7 @@ function applyTheme(theme) {
         setTimeout(() => {
             toast.style.animation = 'slideOut .3s ease forwards';
             setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        }, 4000);
     });
 </script>
 @endif
